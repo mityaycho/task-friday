@@ -1,21 +1,27 @@
-import React from 'react';
-import {HashRouter} from "react-router-dom";
-import {Provider} from "react-redux";
+import React, { useEffect } from 'react';
 import './App.css';
-import store from "./neko-1-main/m-2-bll/store";
-import Main from "./neko-1-main/m-1-ui/Main";
+import HeaderContainer from './components/Header/HeaderContainer';
+import Main from './components/Main/Main';
+import { useDispatch } from 'react-redux';
 
-// add context
-const App: React.FC = () => {
-    return (
-        <div className="App">
-            <HashRouter>
-                <Provider store={store}>
-                    <Main/>
-                </Provider>
-            </HashRouter>
-        </div>
-    );
-};
+import { setIsAuth } from './Redux/signInReducer';
+import { localStorageApi } from './components/api/profileApi';
+
+
+
+function App() {
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    let token = localStorageApi.getToken()
+    token && dispatch(setIsAuth(true, token))
+  }, [])
+
+
+  return <div className="App">
+    <HeaderContainer />
+    <Main />
+  </div>
+}
 
 export default App;
